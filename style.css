@@ -1,0 +1,891 @@
+/*
+Theme Name: Mud YouTube Themes
+Description: A YouTube-inspired WordPress theme with video upload, user registration, and modern responsive design. Features include video management, user channels, subscription system, and complete YouTube-style interface.
+Version: 1.0.0
+Author: 泥人传说
+Author URI: https://nirenchuanshuo.com
+Theme URI: https://nirenchuanshuo.com
+Text Domain: mud-youtube-themes
+Domain Path: /languages
+Requires at least: 4.0
+Tested up to: 6.4
+Requires PHP: 5.6
+Network: false
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Tags: video, youtube, dark-theme, responsive-layout, custom-post-types, user-registration, video-upload, subscription, modern, clean
+
+Mud YouTube Themes is a comprehensive WordPress theme that recreates the YouTube experience.
+Perfect for video sharing websites, online courses, or any video-centric platform.
+
+Copyright (C) 2025 泥人传说
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #0f0f0f;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.site-header {
+    background-color: #212121;
+    padding: 0 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    margin-right: 16px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.site-logo img {
+    height: 20px;
+    margin-right: 8px;
+}
+
+.site-title {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+/* Search Bar */
+.header-center {
+    flex: 1;
+    max-width: 640px;
+    margin: 0 40px;
+}
+
+.search-form {
+    display: flex;
+    height: 40px;
+}
+
+.search-input {
+    flex: 1;
+    background-color: #121212;
+    border: 1px solid #303030;
+    color: #ffffff;
+    padding: 0 16px;
+    font-size: 16px;
+    border-radius: 40px 0 0 40px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1c62b9;
+}
+
+.search-button {
+    background-color: #303030;
+    border: 1px solid #303030;
+    border-left: none;
+    color: #ffffff;
+    padding: 0 24px;
+    cursor: pointer;
+    border-radius: 0 40px 40px 0;
+}
+
+.search-button:hover {
+    background-color: #404040;
+}
+
+/* Header Right */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.header-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.upload-button {
+    background-color: transparent;
+    border: 1px solid #303030;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 56px);
+    background-color: #212121;
+    overflow-y: auto;
+    z-index: 999;
+    transform: translateX(-240px);
+    transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-section {
+    padding: 12px 0;
+    border-bottom: 1px solid #303030;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.sidebar-item:hover {
+    background-color: #303030;
+}
+
+.sidebar-item i {
+    margin-right: 24px;
+    width: 24px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    margin-top: 56px;
+    padding: 24px;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar-open .main-content {
+    margin-left: 240px;
+}
+
+/* Video Grid */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1284px;
+    margin: 0 auto;
+}
+
+.video-card {
+    background-color: transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.video-thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #303030;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-duration {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.video-info {
+    padding: 12px 0;
+    display: flex;
+    gap: 12px;
+}
+
+.channel-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.video-details h3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+
+.video-meta {
+    font-size: 14px;
+    color: #aaaaaa;
+    line-height: 1.3;
+}
+
+.channel-name {
+    color: #aaaaaa;
+    text-decoration: none;
+}
+
+.channel-name:hover {
+    color: #ffffff;
+}
+
+/* Video Player Page */
+.video-player-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 402px;
+    gap: 24px;
+}
+
+.video-primary {
+    min-width: 0;
+}
+
+.video-player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #000000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.video-player video {
+    width: 100%;
+    height: 100%;
+}
+
+.video-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.video-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #303030;
+}
+
+.video-views {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.video-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.action-button.liked {
+    color: #3ea6ff;
+}
+
+/* Channel Info */
+.channel-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.channel-avatar-large {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.channel-details h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.subscriber-count {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.subscribe-button {
+    background-color: #cc0000;
+    border: none;
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: auto;
+}
+
+.subscribe-button:hover {
+    background-color: #aa0000;
+}
+
+.subscribe-button.subscribed {
+    background-color: #303030;
+}
+
+/* Video Description */
+.video-description {
+    background-color: #272727;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.description-preview {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ffffff;
+}
+
+.show-more {
+    color: #aaaaaa;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.show-more:hover {
+    color: #ffffff;
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 24px;
+}
+
+.comments-header {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.comments-count {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sort-comments {
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.comment-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #303030;
+    color: #ffffff;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-bottom-color: #ffffff;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.comment-button {
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    padding: 8px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.comment-button.primary {
+    background-color: #3ea6ff;
+    color: #ffffff;
+}
+
+.comment-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.comment {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-author {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.comment-time {
+    color: #aaaaaa;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.comment-text {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.comment-actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-action {
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comment-action:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Sidebar Videos */
+.video-sidebar {
+    padding-left: 24px;
+}
+
+.sidebar-video {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+.sidebar-thumbnail {
+    width: 168px;
+    aspect-ratio: 16/9;
+    background-color: #303030;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.sidebar-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sidebar-video-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-video-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: #ffffff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sidebar-video-meta {
+    font-size: 12px;
+    color: #aaaaaa;
+    line-height: 1.3;
+}
+
+/* Forms */
+.auth-form {
+    max-width: 400px;
+    margin: 40px auto;
+    background-color: #212121;
+    padding: 32px;
+    border-radius: 12px;
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #aaaaaa;
+}
+
+.form-group input {
+    width: 100%;
+    background-color: #303030;
+    border: 1px solid #404040;
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3ea6ff;
+}
+
+.submit-button {
+    width: 100%;
+    background-color: #3ea6ff;
+    border: none;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #2d8ceb;
+}
+
+.form-links {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.form-links a {
+    color: #3ea6ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+/* Upload Form */
+.upload-form {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #212121;
+    padding: 32px;
+    border-radius: 12px;
+}
+
+.upload-area {
+    border: 2px dashed #404040;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #3ea6ff;
+}
+
+.upload-area.dragover {
+    border-color: #3ea6ff;
+    background-color: rgba(62, 166, 255, 0.1);
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #aaaaaa;
+    margin-bottom: 16px;
+}
+
+.upload-text {
+    font-size: 16px;
+    color: #aaaaaa;
+    margin-bottom: 8px;
+}
+
+.upload-subtext {
+    font-size: 14px;
+    color: #666666;
+}
+
+.file-input {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .video-player-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .video-sidebar {
+        padding-left: 0;
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-center {
+        display: none;
+    }
+    
+    .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+    }
+    
+    .video-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .main-content {
+        padding: 16px;
+    }
+    
+    .sidebar-open .main-content {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-header {
+        padding: 0 8px;
+    }
+    
+    .video-info {
+        gap: 8px;
+    }
+    
+    .channel-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .video-details h3 {
+        font-size: 14px;
+    }
+    
+    .video-meta {
+        font-size: 12px;
+    }
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-16 {
+    margin-bottom: 16px;
+}
+
+.mb-24 {
+    margin-bottom: 24px;
+}
+
+.mt-24 {
+    margin-top: 24px;
+}
+
+/* Loading States */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #404040;
+    border-radius: 50%;
+    border-top-color: #3ea6ff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 72px;
+    right: 16px;
+    background-color: #212121;
+    color: #ffffff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 4px solid #00ff00;
+}
+
+.notification.error {
+    border-left: 4px solid #ff0000;
+} 
