@@ -84,7 +84,7 @@ Mud YouTube Themes 是一个专为WordPress设计的YouTube风格主题，完美
 
 ```bash
 # 1. 下载主题文件
-wget https://github.com/cyberxsboy/Mud-youtube-themes/releases/download/v1.0.0-Mud-youtube-themes-worpdress/Mud.youtube.themes.zip
+wget https://github.com/cyberxsboy/Mud-youtube-themes/releases/download/v1.0.0/Mud.youtube.themes.zip
 
 # 2. 解压到主题目录
 unzip mud-youtube-themes.zip -d /wp-content/themes/
